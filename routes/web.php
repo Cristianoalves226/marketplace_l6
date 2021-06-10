@@ -15,5 +15,19 @@ Route::get('/', function () {
     $helloWorld = 'Hello World';
 
 
-    return view('welcome',['helloWorld'=>$helloWorld]);
+    return view('welcome', ['helloWorld' => $helloWorld]);
+});
+
+
+Route::get('/model', function () {
+    //$products = \App\Product::all();
+
+    $user = new \App\User();
+    $user->name = "Usuario Teste";
+    $user->email = "email@teste.com";
+    $user->password = bcrypt('12345678');
+
+    $user->save();
+
+    return \APP\User::all();
 });
