@@ -22,12 +22,22 @@ Route::get('/', function () {
 Route::get('/model', function () {
     //$products = \App\Product::all();
 
-    $user = new \App\User();
+    /*   $user = new \App\User();
     $user->name = "Usuario Teste";
     $user->email = "email@teste.com";
     $user->password = bcrypt('12345678');
 
     $user->save();
 
-    return \APP\User::all();
+    return \APP\User::all(); */
+
+    $user = \App\User::create(
+        [
+            'name' => 'Nando Castro',
+            'email' => 'email11@email.com',
+            'password' => bcrypt('12345678')
+        ]
+    );
+    dd($user);
+    return $user;
 });
