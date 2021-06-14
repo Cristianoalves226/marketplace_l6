@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
+use Illuminate\Http\Request;
 class StoreController extends Controller
 {
     public function index()
@@ -24,10 +24,37 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         $data =$request->all();
+            
+        $user = \App\User::find($data['user']);
+        $store = $user->store()->create($data);
 
-        $users = \App\User::find($data['users']);
-        $store = $users->store()->create($data);
-
-        return $store;
+        flash('Loja criada com sucesso')->success();
+        return redirect()->route('admin.stores.index');
     }
+
+    public function edit($store){
+        $store = \App\Store::find($store);
+
+        return view('admin.stores.edit',compact('store'));
+    }
+
+    public function update(Request $request, $store){
+        $data =$request->all();
+
+        $store = \App\Store::find($store);
+        $store->update($data);
+
+        flash('Loja atualizada com sucesso')->success();
+        return redirect()->route('admin.stores.index');
+    }
+
+    public function destroy($store){
+
+        $store = \App\Store::find($store);
+        $store->delete();
+
+        flash('Loja removida com sucesso')->success();
+        return redirect()->route('admin.stores.index');
+    }
+
 }
