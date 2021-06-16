@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -13,18 +14,18 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    private $product ;
+    private $product;
     public function __construct(Product $product)
     {
         $this->product = $product;
-    }    
+    }
 
     public function index()
     {
         //
         $products = $this->product->paginate(10);
 
-        return view('admin.products.index',compact('products'));
+        return view('admin.products.index', compact('products'));
     }
 
     /**
@@ -35,26 +36,33 @@ class ProductController extends Controller
     public function create()
     {
         //
-        $stores = \App\Store::all(['id','name']);
+        $stores = \App\Store::all(['id', 'name']);
 
-        return view('admin.products.create',compact('stores'));
+        return view('admin.products.create', compact('stores'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //
+        $data = $request->all();
+
+        $store = \App\Store::find($data['store']);
+        $store->products->create($data);
+
+        flash('Produto criado com sucesso')->success();
+        return redirect()->route('admin.products.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -65,7 +73,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($product)
@@ -73,25 +81,32 @@ class ProductController extends Controller
         //
         $product = $this->product->find($product);
 
-        return view('admin.products.edit',compact('product'));
+        return view('admin.products.edit', compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int                      $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $product)
     {
         //
+        $data = $request->all();
+
+        $product = $this->product->find($product);
+        $product->update($data);
+
+        flash('Produto atualizado com sucesso')->success();
+        return redirect()->route('admin.products.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($product)
